@@ -10,3 +10,14 @@ Then in the conda environment do:
 ```sh
 download_datasets.py
 ```
+After that, if privileges are not set, be sure to give the following permissions:
+```sh
+chmod 777 execute_parallel.sh
+chmod 777 parallel.sh
+chmod 777 gpgomea_experiments_no_list.py
+```
+Then just run
+```sh
+./execute_parallel.sh x
+```
+where x is the number of parallel processes to execute concurrently
