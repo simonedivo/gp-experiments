@@ -46,12 +46,6 @@ def save_file(str, dir, filename):
     with open(full_path, "w") as f:
         f.write(str)
 
-def generate_random_seeds(n_seeds):
-    list_of_numbers = list(range(0, 1000000))
-    random_seeds = random.sample(list_of_numbers, n_seeds)
-    save_file(str(random_seeds), 'GPGomea/random_seeds', 'random_seeds.txt')
-    return random_seeds
-
 def seeded_training_set_dimension(dataset, dimension, seed):
     return dataset.sample(n=dimension, random_state=seed)
 
@@ -119,60 +113,19 @@ def GPGR_custom_starter(X_train, X_test, y_train, y_test, popsize, generations, 
     #quit()
     return model, final_population, n_nodes, evaluations, progress_log, test_rmse, train_rmse, time_taken
 
-def seeded_grid_search(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension_list, popsize_generations_list, seed):
-    #print("Starting date & time: ", datetime.now())
-    i = 0
-    lst = []
-
-    for training_set_dimension in training_set_dimension_list:
-        X_train_subset, y_train_subset = seeded_custom_dataset_creator(X_train, y_train, training_set_dimension, seed)
-        for popsize, generations in popsize_generations_list:
-            #print("Iteration: ", i)
-            i+=1
-            #print("Training set dimension: ", training_set_dimension, "Popsize: ", popsize, "Generations: ", generations)
-            model, final_population, n_nodes, evaluations, progress_log, test_rsme, train_rmse, time_taken = GPGR_custom_starter(X_train_subset, X_test, y_train_subset, y_test, popsize, generations, seed)
-            lst.append([training_set_dimension, popsize, generations, test_rsme, train_rmse, time_taken, model, final_population, n_nodes, evaluations])
-            save_file(progress_log, "GPGomea/progress_logs", "progress_log_"+ dataset_name + "_train_dim_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + ".csv")
-                
-    
-    #print("Ending date & time: ", datetime.now())
-    results = pd.DataFrame(lst, columns=['training_set_dimension', 'popsize', 'generations', 'test_rmse', 'train_rmse', 'time_taken', 'model', 'final_population', 'n_nodes', 'evaluations'])
-    return results
-
 def seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed):
     lst = []
     X_train_subset, y_train_subset = seeded_custom_dataset_creator(X_train, y_train, training_set_dimension, seed)
     model, final_population, n_nodes, evaluations, progress_log, test_rsme, train_rmse, time_taken = GPGR_custom_starter(X_train_subset, X_test, y_train_subset, y_test, popsize, generations, seed)
     lst.append([training_set_dimension, popsize, generations, test_rsme, train_rmse, time_taken, model, final_population, n_nodes, evaluations])
-    save_file(progress_log, "GPGomea/progress_logs", "progress_log_"+ dataset_name + "_train_dim_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + ".csv")
+    save_file(progress_log, "GPGomea/progress_logs", "progress_log_"+ dataset_name + "_seed_" + str(seed) +  "_train_dim_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + ".csv")
 
     results = pd.DataFrame(lst, columns=['training_set_dimension', 'popsize', 'generations', 'test_rmse', 'train_rmse', 'time_taken', 'model', 'final_population', 'n_nodes', 'evaluations'])
     return results
 
-    
-
 def create_folder(folder_path):
     if not os.path.exists(folder_path):
         os.makedirs(folder_path)
-
-def all_in_one(datasets_folder, dataset_name, result_path, seed, training_set_dimension_list, popsize_generations_list):
-
-    dataset_path = os.path.join(datasets_folder, dataset_name)
-    
-    if("csv" in dataset_path):
-        dataset = pd.read_csv(dataset_path)
-    if("tsv" in dataset_path):
-        dataset = pd.read_csv(dataset_path, sep='\t')
-    
-    dataset.dropna(inplace=True)
-    X = dataset.drop(columns=['target'])
-    y = dataset['target']
-    #print("Currently working on " + dataset_path + " with seed " + str(seed))
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=seed, shuffle=True)
-    X_test = X_test.to_numpy()
-    y_test = y_test.to_numpy()
-    results = seeded_grid_search(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension_list, popsize_generations_list, seed)
-    results.to_csv( os.path.join(result_path,'results_of_' + dataset_name + '_seed_' + str(seed) + '.csv'), index=False)
 
 def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, training_set_dimension, popsize, generations):
 
@@ -180,8 +133,11 @@ def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, trainin
     
     if("csv" in dataset_path):
         dataset = pd.read_csv(dataset_path)
+        dataset_name = dataset_name.replace(".csv", "")
     if("tsv" in dataset_path):
         dataset = pd.read_csv(dataset_path, sep='\t')
+        dataset_name = dataset_name.replace(".tsv", "")
+
     
     dataset.dropna(inplace=True)
     X = dataset.drop(columns=['target'])
@@ -191,7 +147,7 @@ def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, trainin
     X_test = X_test.to_numpy()
     y_test = y_test.to_numpy()
     results = seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed)
-    results.to_csv( os.path.join(result_path,'results_of_' + dataset_name + '_seed_' + str(seed) + 'training_set_dimension' + training_set_dimension + 'popsize' + popsize + 'generations' + generations + '.csv'), index=False)
+    results.to_csv( os.path.join(result_path,'results_of_' + dataset_name + '_seed_' + str(seed) + '_training_set_dimension' + str(training_set_dimension) + '_popsize_' + str(popsize) + '_generations_' + str(generations) + '.csv'), index=False)
         
 
 if __name__ == '__main__':
