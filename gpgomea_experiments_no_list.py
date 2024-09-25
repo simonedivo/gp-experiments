@@ -9,11 +9,6 @@ import os
 import sys
 
 def main():
-    #datasets_folder = './datasets/'
-    #datasets = ['1191_BNG_pbc.tsv', '1196_BNG_pharynx.tsv', '1595_poker.tsv']
-    #n_seeds = 2
-    #training_set_dimension_list = [100, 1000]
-    #popsize_generations_list = [[10,10], [100, 10]]
     result_path = 'GPGomea/results'
     create_folder(result_path)
     datasets_folder = './datasets/'
@@ -24,15 +19,6 @@ def main():
     training_set_dimension = int(sys.argv[3])
     popsize = int(sys.argv[4])
     generations = int(sys.argv[5])
-
-    #training_set_dimension_list = sys.argv[3].split("/")
-    #for i in range(len(training_set_dimension_list)):
-    #    training_set_dimension_list[i] = int(training_set_dimension_list[i])
-    #pgl = sys.argv[4]
-    #popsize_generations_list = [string.split('/') for string in pgl.split('|')]
-    #for i in range(len(popsize_generations_list)):
-    #    for j in range(len(popsize_generations_list[i])):
-    #        popsize_generations_list[i][j] = int(popsize_generations_list[i][j])
     
     #print(seed, dataset_name, training_set_dimension_list, popsize_generations_list)
 
