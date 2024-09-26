@@ -6,6 +6,11 @@ conda env create -f environment.yml
 conda activate gpgomenv-sd
 make
 ```
+Then clone this repository and enter inside the folder:
+```sh
+https://github.com/simonedivo/gp-experiments
+cd gp-experiments
+```
 Then in the conda environment do:
 ```sh
 download_datasets.py

@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from datetime import datetime
-import random
 from pyGPGOMEA import GPGOMEARegressor as GPGR
 import os
 import sys
@@ -54,18 +53,24 @@ def seeded_custom_dataset_creator(X_train, y_train, train_dimension, seed):
 
 def GPGR_custom_starter(X_train, X_test, y_train, y_test, popsize, generations, seed):
     ea = GPGR( 
-    	gomea=False,
+    	gomea=False,gomfos='LT',
     	functions="+_-_*_p/",
     	time=-1, generations=generations, evaluations=-1,
-        subcross=0.8, submut=0.4,
-        elitism=1,
-    	initmaxtreeheight=4,
-        maxtreeheight=12,
-    	ims=False,
+        linearscaling=True,prob="symbreg",multiobj=False,
+        erc=True,classweights=False,
+        subcross=0.8,submut=0.4,reproduction=0.0,
+        sblibtype=False,sbrdo=0.0,sbagx=0.0,
+        unifdepthvar=True,tournament=4,elitism=1,
+    	initmaxtreeheight=4,inittype=False,
+        maxtreeheight=8,maxsize=1000,
+    	ims=False,syntuniqinit=1000,
     	popsize=popsize,
-    	parallel=False,
-    	linearscaling=True,
+        validation=False,
+        coeffmut=False,
+        gomcoeffmutstrat=False,
+        batchsize=False,
         seed=seed,
+        parallel=False,
         caching=False,
         logtofile=False,
     	silent=True)
