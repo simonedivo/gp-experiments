@@ -8,7 +8,7 @@ make
 ```
 Then clone this repository and enter inside the folder:
 ```sh
-git clone github.com/simonedivo/gp-experiments
+git clone https://github.com/simonedivo/gp-experiments
 cd gp-experiments
 ```
 Then in the conda environment do:
