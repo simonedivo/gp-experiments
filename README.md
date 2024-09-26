@@ -13,13 +13,12 @@ cd gp-experiments
 ```
 Then in the conda environment do:
 ```sh
-download_datasets.py
+download_datasets_and_mkdir.py
 ```
 After that, if privileges are not set, be sure to give the following permissions:
 ```sh
-chmod 777 execute_parallel.sh
-chmod 777 parallel.sh
-chmod 777 gpgomea_experiments_no_list.py
+chmod 777 *.sh
+chmod 777 *.py
 ```
 Then just run
 ```sh
