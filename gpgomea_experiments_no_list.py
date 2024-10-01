@@ -105,7 +105,7 @@ def GPGR_custom_starter(X_train, X_test, y_train, y_test, popsize, generations, 
     ea.fit(X_train, y_train)
     ending_time = datetime.now()
     # get the model and change some operators such as protected division and protected log to be sympy-digestible
-    model = ea.get_model().replace("p/","/").replace("plog","log")
+    #model = ea.get_model().replace("p/","/").replace("plog","log")
     # let's also call vars with their names
     #model = str(sympy.simplify(model))
     #model = model.replace("x0","mass1").replace("x1","mass2").replace("x2","dist")
@@ -119,7 +119,7 @@ def GPGR_custom_starter(X_train, X_test, y_train, y_test, popsize, generations, 
     train_rmse = np.sqrt( mean_squared_error(y_train, ea.predict(X_train)) )
     #print('Test RMSE:', test_rmse)
     #print('Train RMSE:', train_rmse)
-    final_population = ea.get_final_population(X_train)
+    #final_population = ea.get_final_population(X_train)
     n_nodes = ea.get_n_nodes()
     evaluations = ea.get_evaluations()
     progress_log = ea.get_progress_log()
@@ -129,16 +129,17 @@ def GPGR_custom_starter(X_train, X_test, y_train, y_test, popsize, generations, 
     #print("\n")
 
     #quit()
-    return model, final_population, n_nodes, evaluations, progress_log, test_rmse, train_rmse, time_taken
+    return n_nodes, evaluations, progress_log, test_rmse, train_rmse, time_taken
 
 def seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed):
     lst = []
     X_train_subset, y_train_subset = custom_dataset_creator(X_train, y_train, training_set_dimension) #training set sample may change for each iteration
-    model, final_population, n_nodes, evaluations, progress_log, test_rsme, train_rmse, time_taken = GPGR_custom_starter(X_train_subset, X_test, y_train_subset, y_test, popsize, generations, seed)
-    lst.append([training_set_dimension, popsize, generations, test_rsme, train_rmse, time_taken, model, final_population, n_nodes, evaluations])
+    n_nodes, evaluations, progress_log, test_rsme, train_rmse, time_taken = GPGR_custom_starter(X_train_subset, X_test, y_train_subset, y_test, popsize, generations, seed)
+    lst.append([training_set_dimension, popsize, generations, test_rsme.round(3), train_rmse.round(3), time_taken, n_nodes, evaluations])
     save_file(progress_log, "GPGomea/progress_logs", "progress_log_"+ dataset_name + "_seed_" + str(seed) +  "_train_dim_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + ".csv")
 
-    results = pd.DataFrame(lst, columns=['training_set_dimension', 'popsize', 'generations', 'test_rmse', 'train_rmse', 'time_taken', 'model', 'final_population', 'n_nodes', 'evaluations'])
+    results = pd.DataFrame(lst, columns=['training_set_dimension', 'popsize', 'generations', 'test_rmse', 'train_rmse', 'time_taken', 'n_nodes', 'evaluations'])
+    results['time_taken'] = results['time_taken'].dt.total_seconds()
     return results
 
 def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, training_set_dimension, popsize, generations):
