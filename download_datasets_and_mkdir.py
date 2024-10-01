@@ -11,7 +11,7 @@ result_path = 'GPGomea/results'
 if not os.path.exists(result_path):
     os.makedirs(result_path)
 
-progress_log_path = 'GPGomea/progress_log'
+progress_log_path = 'GPGomea/progress_logs'
 if not os.path.exists(progress_log_path):
     os.makedirs(progress_log_path)
 print("Folders created!")

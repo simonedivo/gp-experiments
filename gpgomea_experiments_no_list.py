@@ -6,10 +6,12 @@ from datetime import datetime
 from pyGPGOMEA import GPGOMEARegressor as GPGR
 import os
 import sys
+import random
 
 def main():
     result_path = 'GPGomea/results'
     create_folder(result_path)
+    create_folder("GPGomea/progress_logs")
     datasets_folder = './datasets/'
 
     seed = int(sys.argv[1])
@@ -23,6 +25,9 @@ def main():
 
     all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, training_set_dimension, popsize, generations)
 
+def create_folder(folder_path):
+    if not os.path.exists(folder_path):
+        os.makedirs(folder_path)
 
 def save_file(str, dir, filename):
     if not os.path.exists(dir):
@@ -30,6 +35,28 @@ def save_file(str, dir, filename):
     full_path = os.path.join(dir, filename)
     with open(full_path, "w") as f:
         f.write(str)
+
+def training_set_dimension(dataset, dimension, random_seed):
+    return dataset.sample(n=dimension, random_state=random_seed)
+
+def custom_dataset_creator(X_train, y_train, train_dimension):
+
+    if(train_dimension >= X_train.shape[0]):
+        X_train.to_numpy()
+        y_train.to_numpy()
+        return X_train.values, y_train.values
+        #return X_train, y_train
+
+    random_seed = random.randint(0, 1000000)
+
+    X_train_subset = training_set_dimension(X_train, train_dimension, random_seed)
+    y_train_subset = training_set_dimension(y_train, train_dimension, random_seed)
+
+    X_train_subset.to_numpy()
+    y_train_subset.to_numpy()
+    
+    return X_train_subset.values, y_train_subset.values
+    #return X_train_subset, y_train_subset
 
 def seeded_training_set_dimension(dataset, dimension, seed):
     return dataset.sample(n=dimension, random_state=seed)
@@ -106,17 +133,13 @@ def GPGR_custom_starter(X_train, X_test, y_train, y_test, popsize, generations, 
 
 def seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed):
     lst = []
-    X_train_subset, y_train_subset = seeded_custom_dataset_creator(X_train, y_train, training_set_dimension, seed)
+    X_train_subset, y_train_subset = custom_dataset_creator(X_train, y_train, training_set_dimension) #training set sample may change for each iteration
     model, final_population, n_nodes, evaluations, progress_log, test_rsme, train_rmse, time_taken = GPGR_custom_starter(X_train_subset, X_test, y_train_subset, y_test, popsize, generations, seed)
     lst.append([training_set_dimension, popsize, generations, test_rsme, train_rmse, time_taken, model, final_population, n_nodes, evaluations])
     save_file(progress_log, "GPGomea/progress_logs", "progress_log_"+ dataset_name + "_seed_" + str(seed) +  "_train_dim_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + ".csv")
 
     results = pd.DataFrame(lst, columns=['training_set_dimension', 'popsize', 'generations', 'test_rmse', 'train_rmse', 'time_taken', 'model', 'final_population', 'n_nodes', 'evaluations'])
     return results
-
-def create_folder(folder_path):
-    if not os.path.exists(folder_path):
-        os.makedirs(folder_path)
 
 def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, training_set_dimension, popsize, generations):
 
@@ -134,7 +157,7 @@ def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, trainin
     X = dataset.drop(columns=['target'])
     y = dataset['target']
     #print("Currently working on " + dataset_path + " with seed " + str(seed))
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=seed, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=42, shuffle=True) #random_state always 42 to keep the same split for all seeds
     X_test = X_test.to_numpy()
     y_test = y_test.to_numpy()
     results = seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed)
