@@ -12,6 +12,7 @@ def main():
     result_path = 'GPGomea/results'
     create_folder(result_path)
     create_folder("GPGomea/progress_logs")
+    save_file("List of already finished runs \n","GPGomea/finished_runs","finished_runs.txt")
     datasets_folder = './datasets/'
 
     seed = int(sys.argv[1])
@@ -36,6 +37,11 @@ def save_file(str, dir, filename):
     with open(full_path, "w") as f:
         f.write(str)
 
+def update_file(str, dir, filename):
+    full_path = os.path.join(dir, filename)
+    with open(full_path, "a") as f:
+        f.write(str)
+
 def training_set_dimension(dataset, dimension, random_seed):
     return dataset.sample(n=dimension, random_state=random_seed)
 
@@ -58,6 +64,7 @@ def custom_dataset_creator(X_train, y_train, train_dimension):
     return X_train_subset.values, y_train_subset.values
     #return X_train_subset, y_train_subset
 
+#Questo prenderebbe in input il seed della run e lo utilizzerebbe per fare il sample del training set -> il training set incrementale avrà sempre gli elementi di quelli prima
 def seeded_training_set_dimension(dataset, dimension, seed):
     return dataset.sample(n=dimension, random_state=seed)
 
@@ -163,6 +170,7 @@ def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, trainin
     y_test = y_test.to_numpy()
     results = seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed)
     results.to_csv( os.path.join(result_path,'results_of_' + dataset_name + '_seed_' + str(seed) + '_training_set_dimension' + str(training_set_dimension) + '_popsize_' + str(popsize) + '_generations_' + str(generations) + '.csv'), index=False)
+    update_file(dataset_name + "_seed_" + str(seed) + "_training_set_dimension_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + "\n", "GPGomea/finished_runs", "finished_runs.txt")
         
 
 if __name__ == '__main__':
