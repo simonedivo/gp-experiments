@@ -1,10 +1,8 @@
 import gdown
 import os
 
-print("Downloading datasets...")
 url = "https://drive.google.com/drive/folders/1Se6O2pFYaHLhfSTwGZXbFJqw4NeUdnNB?usp=sharing"
 gdown.download_folder(url)
-print("Download complete!")
 
 print("Creating folders...")
 result_path = 'GPGomea/results'

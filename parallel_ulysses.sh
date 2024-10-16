@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ORANGE=$ì'\033[0;33m'
+ORANGE=$'\033[0;33m'
 NC=$'\033[0m' # No Color
 GREEN=$'\033[0;32m'
 
