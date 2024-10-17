@@ -1,9 +1,9 @@
-import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from datetime import datetime
 from pyGPGOMEA import GPGOMEARegressor as GPGR
+import pandas as pd
+import numpy as np
 import os
 import sys
 import random
@@ -36,11 +36,13 @@ def save_file(str, dir, filename):
     full_path = os.path.join(dir, filename)
     with open(full_path, "w") as f:
         f.write(str)
+        f.close()
 
 def update_file(str, dir, filename):
     full_path = os.path.join(dir, filename)
     with open(full_path, "a") as f:
         f.write(str)
+        f.close()
 
 def training_set_dimension(dataset, dimension, random_seed):
     return dataset.sample(n=dimension, random_state=random_seed)
