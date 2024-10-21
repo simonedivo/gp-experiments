@@ -13,12 +13,12 @@ os.chmod(result_path, 0o777)
 progress_log_path = 'GPGomea/progress_logs'
 if not os.path.exists(progress_log_path):
     os.makedirs(progress_log_path)
-os.chmod(result_path, 0o777)
+os.chmod(progress_log_path, 0o777)
 
 finished_runs_path = 'GPGomea/finished_runs'
 if not os.path.exists(finished_runs_path):
     os.makedirs(finished_runs_path)
-os.chmod(result_path, 0o777)
+os.chmod(finished_runs_path, 0o777)
 print("Folders created!")
 
 
