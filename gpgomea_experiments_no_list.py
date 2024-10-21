@@ -11,8 +11,11 @@ import random
 def main():
     result_path = 'GPGomea/results'
     create_folder(result_path)
-    create_folder("GPGomea/progress_logs")
-    save_file("List of already finished runs \n","GPGomea/finished_runs","finished_runs.txt")
+    progress_log_path = 'GPGomea/progress_logs'
+    create_folder(progress_log_path)
+    finished_runs_path = 'GPGomea/finished_runs'
+    create_folder(finished_runs_path)
+
     datasets_folder = './datasets/'
 
     seed = int(sys.argv[1])
