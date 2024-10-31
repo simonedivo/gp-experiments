@@ -175,7 +175,7 @@ def all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, trainin
     y_test = y_test.to_numpy()
     results = seeded_grid_search_no_list(dataset_name, X_train, X_test, y_train, y_test, training_set_dimension, popsize, generations, seed)
     results.to_csv( os.path.join(result_path,'results_of_' + dataset_name + '_seed_' + str(seed) + '_training_set_dimension' + str(training_set_dimension) + '_popsize_' + str(popsize) + '_generations_' + str(generations) + '.csv'), index=False)
-    update_file(dataset_name + "_seed_" + str(seed) + "_training_set_dimension_" + str(training_set_dimension) + "_popsize_" + str(popsize) + "_generations_" + str(generations) + "\n", "GPGomea/finished_runs", "finished_runs.txt")
+    update_file(str(seed) + "," + dataset_name + "," + str(training_set_dimension) + "," + str(popsize) + "," + str(generations) + "\n", "GPGomea/finished_runs", "finished_runs.txt")
         
 
 if __name__ == '__main__':
