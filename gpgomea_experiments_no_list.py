@@ -7,6 +7,7 @@ import pandas as pd
 import os
 import sys
 import random
+import traceback
 
 def main():
     result_path = 'GPGomea/results'
@@ -15,6 +16,8 @@ def main():
     create_folder(progress_log_path)
     finished_runs_path = 'GPGomea/finished_runs'
     create_folder(finished_runs_path)
+    error_runs_path = 'GPGomea/error_runs'
+    create_folder(error_runs_path)
 
     datasets_folder = './datasets/'
 
@@ -26,8 +29,12 @@ def main():
     generations = int(sys.argv[5])
     
     #print(seed, dataset_name, training_set_dimension_list, popsize_generations_list)
-
-    all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, training_set_dimension, popsize, generations)
+    try:
+        all_in_one_no_list(datasets_folder, dataset_name, result_path, seed, training_set_dimension, popsize, generations)
+    except:
+        error_run = str(seed) + "," + dataset_name + "," + str(training_set_dimension) + "," + str(popsize) + "," + str(generations)
+        complete_error = error_run + "\n" + traceback.format_exc()
+        save_file(complete_error, error_runs_path, "error_run_"+ error_run +".txt")
 
 def create_folder(folder_path):
     if not os.path.exists(folder_path):

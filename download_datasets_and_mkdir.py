@@ -24,6 +24,11 @@ if not os.path.exists(progress_log_path):
 finished_runs_path = 'GPGomea/finished_runs'
 if not os.path.exists(finished_runs_path):
     os.makedirs(finished_runs_path)
+
+error_runs_path = 'GPGomea/error_runs'
+if not os.path.exists(error_runs_path):
+    os.makedirs(error_runs_path)
+
 save_file("List of already finished runs \n","GPGomea/finished_runs","finished_runs.txt")
 print("Folders created!")
 
