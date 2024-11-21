@@ -1,9 +1,6 @@
 #!/bin/bash
 
-YELLOW=$'\033[0;33m'
-NC=$'\033[0m' # No Color
-GREEN=$'\033[0;32m'
-
-echo "${YELLOW} started processing $*.. ${NC}"
+echo "started processing $*.."
 python3 gpgomea_experiments_no_list.py $*;
-echo "${GREEN}finished processing $* ${NC}";
+python3 edit_input_args.py $*;
+echo "finished processing $*";
