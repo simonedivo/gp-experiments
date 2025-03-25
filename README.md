@@ -1,3 +1,7 @@
+Already finished experiment can be found at:
+```sh
+https://drive.google.com/file/d/1KSFuojpR2vJb4fZkCn9eB0VKK6FRhloC/view?usp=sharing
+```
 To run it do:
 ```sh
 git clone https://github.com/simonedivo/GP-GOMEA
